@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import {
   FaHome,
   FaUtensils,
@@ -15,25 +16,92 @@ import {
   FaBoxes,
   FaHamburger,
   FaExternalLinkAlt,
+  FaChevronDown,
+  FaChevronUp,
 } from 'react-icons/fa';
 
 const Sidebar = ({ sidebarToggle }) => {
+  const [expanded, setExpanded] = useState(null);
+
   const menuItems = [
-    { label: 'Dashboard', icon: <FaHome /> },
-    { label: 'Menu', icon: <FaUtensils /> },
-    { label: 'Tables', icon: <FaChair /> },
-    { label: 'Waiter Requests', icon: <FaBell /> },
-    { label: 'Reservations', icon: <FaCalendarAlt /> },
-    { label: 'POS', icon: <FaCashRegister /> },
-    { label: 'Orders', icon: <FaClipboardList /> },
-    { label: 'Customers', icon: <FaUsers /> },
-    { label: 'Staff', icon: <FaUserTie /> },
-    { label: 'Delivery Executive', icon: <FaMotorcycle /> },
-    { label: 'Payments', icon: <FaCreditCard /> },
-    { label: 'Reports', icon: <FaChartBar /> },
-    { label: 'Inventory', icon: <FaBoxes /> },
-    { label: 'Kitchen', icon: <FaHamburger /> },
+    { label: 'Dashboard', icon: <FaHome />, href: '/' },
+    {
+      label: 'Menu',
+      icon: <FaUtensils />,
+      children: [
+        { label: 'Menus', href: '/menus' },
+        { label: 'Menu Items', href: '/menu-items' },
+        { label: 'Item Categories', href: '/item-categories' },
+        { label: 'Modifier Groups', href: '/modifier-groups' },
+        { label: 'Item Modifiers', href: '/item-modifiers' },
+      ],
+    },
+    {
+      label: 'Tables',
+      icon: <FaChair />,
+      children: [
+        { label: 'Areas', href: '/areas' },
+        { label: 'Tables', href: '/tables' },
+        { label: 'Table Codes', href: '/table-codes' },
+      ],
+    },
+    { label: 'Waiter Requests', icon: <FaBell />, href: '/waiter-requests' },
+    { label: 'Reservations', icon: <FaCalendarAlt />, href: '/reservations' },
+    { label: 'POS', icon: <FaCashRegister />, href: '/pos' },
+    { label: 'Orders', icon: <FaClipboardList />, href: '/orders' },
+    { label: 'Customers', icon: <FaUsers />, href: '/customers' },
+    { label: 'Staff', icon: <FaUserTie />, href: '/staff' },
+    { label: 'Delivery Executive', icon: <FaMotorcycle />, href: '/delivery-executive' },
+    {
+      label: 'Payments',
+      icon: <FaCreditCard />,
+      children: [
+        { label: 'Due Payments', href: '/due-payments' },
+        { label: 'Expenses', href: '/expenses' },
+        { label: 'Expense Categories', href: '/expense-categories' },
+      ],
+    },
+    {
+      label: 'Reports',
+      icon: <FaChartBar />,
+      children: [
+        { label: 'Sales Report', href: '/sales-report' },
+        { label: 'Item Report', href: '/item-report' },
+        { label: 'Category Report', href: '/category-report' },
+        { label: 'Expense Report', href: '/expense-report' },
+      ],
+    },
+    {
+      label: 'Inventory',
+      icon: <FaBoxes />,
+      children: [
+        { label: 'Dashboard', href: '/inventory-dashboard' },
+        { label: 'Units', href: '/inventory-units' },
+        { label: 'Inventory Items', href: '/inventory-items' },
+        { label: 'Item Categories', href: '/inventory-item-categories' },
+        { label: 'Inventory Stock', href: '/inventory-stock' },
+        { label: 'Inventory Movement', href: '/inventory-movement' },
+        { label: 'Recipes', href: '/recipes' },
+        { label: 'Purchase Orders', href: '/purchase-orders' },
+        { label: 'Suppliers', href: '/suppliers' },
+        { label: 'Reports', href: '/inventory-reports' },
+      ],
+    },
+    {
+      label: 'Kitchen',
+      icon: <FaHamburger />,
+      children: [
+        { label: 'All Kitchen', href: '/all-kitchens' },
+        { label: 'Default Kitchen', href: '/default-kitchen' },
+        { label: 'Veg Kitchen', href: '/veg-kitchen' },
+        { label: 'Non-Veg Kitchen', href: '/nonveg-kitchen' },
+      ],
+    },
   ];
+
+  const toggleSubMenu = (label) => {
+    setExpanded((prev) => (prev === label ? null : label));
+  };
 
   return (
     <aside
@@ -56,17 +124,51 @@ const Sidebar = ({ sidebarToggle }) => {
         </button>
       </div>
 
-      {/* Navigation Links */}
+      {/* Navigation */}
       <nav className="space-y-1">
         {menuItems.map((item, idx) => (
-          <a
-            href="#"
-            key={idx}
-            className="flex items-center gap-3 px-3 py-2 text-gray-700 hover:bg-purple-100 hover:text-purple-700 rounded-md transition text-sm"
-          >
-            <span className="text-lg">{item.icon}</span>
-            <span>{item.label}</span>
-          </a>
+          <div key={idx}>
+            {item.children ? (
+              <button
+                className="flex items-center justify-between w-full px-3 py-2 text-gray-700 hover:bg-purple-100 hover:text-purple-700 rounded-md transition text-sm"
+                onClick={() => toggleSubMenu(item.label)}
+              >
+                <span className="flex items-center gap-3">
+                  <span className="text-lg">{item.icon}</span>
+                  <span>{item.label}</span>
+                </span>
+                {expanded === item.label ? (
+                  <FaChevronUp className="w-3 h-3" />
+                ) : (
+                  <FaChevronDown className="w-3 h-3" />
+                )}
+              </button>
+            ) : (
+              <Link
+                to={item.href}
+                className="flex items-center gap-3 px-3 py-2 text-gray-700 hover:bg-purple-100 hover:text-purple-700 rounded-md transition text-sm"
+              >
+                <span className="text-lg">{item.icon}</span>
+                <span>{item.label}</span>
+              </Link>
+            )}
+
+            {/* Submenu */}
+            {item.children && expanded === item.label && (
+              <div className="ml-6 mt-1 space-y-1">
+                {item.children.map((child, childIdx) => (
+                  <Link
+                    to={child.href}
+                    key={childIdx}
+                    className="flex items-center gap-2 text-sm text-gray-600 px-3 py-2 rounded-md hover:bg-purple-50 hover:text-purple-700 transition group"
+                  >
+                    <span className="w-1.5 h-1.5 rounded-full bg-purple-300 group-hover:bg-purple-600"></span>
+                    <span>{child.label}</span>
+                  </Link>
+                ))}
+              </div>
+            )}
+          </div>
         ))}
       </nav>
 
