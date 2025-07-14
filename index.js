@@ -9,6 +9,8 @@ const reservationRouter = require('./Routes/ReservationRouter');
 require('./Models/db'); // This should establish your DB connection
 const executiveRoutes = require("./Routes/ExecutiveRoute");
 const staffRoutes = require("./Routes/Staff")
+const tableRoutes = require("./Routes/TableRoutes");
+const areaRoutes = require("./Routes/AreasRouter");
 const app = express();
 const PORT = process.env.PORT || 8080;
 
@@ -27,6 +29,8 @@ app.use('/menus', menuRouter);
 app.use('/api/reservations', reservationRouter);
 app.use("/api/executives", executiveRoutes);
 app.use("/api/staff",staffRoutes);
+app.use("/api/tables", tableRoutes);
+app.use("/api/areas", areaRoutes);
 app.listen(PORT, () => {
   console.log(`✅ Server is running on port ${PORT}`);
 });
