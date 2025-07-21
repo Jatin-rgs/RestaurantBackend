@@ -1,25 +1,31 @@
-const router = require("express").Router();
-const {
-  getMenuItems,
-  getMenuItemById,
-  addMenuItem,
-  updateMenuItem,
-  deleteMenuItem
-} = require("../Controllers/MenuController");
+const express = require('express');
+const Menu = require('../models/Menu');
+const router = express.Router();
 
-// GET /api/menus?menu=MenuName
-router.get("/", getMenuItems);
+// Get all menus
+router.get('/', async (req, res) => {
+  const menus = await Menu.find();
+  res.json(menus);
+});
 
-// GET /api/menus/:id
-router.get("/:id", getMenuItemById);
+// Add menu
+router.post('/', async (req, res) => {
+  const { name } = req.body;
+  const newMenu = new Menu({ name, items: [] });
+  await newMenu.save();
+  res.json(newMenu);
+});
 
-// POST /api/menus
-router.post("/", addMenuItem);
+// Update menu name
+router.put('/:id', async (req, res) => {
+  const updated = await Menu.findByIdAndUpdate(req.params.id, { name: req.body.name }, { new: true });
+  res.json(updated);
+});
 
-// PUT /api/menus/:id
-router.put("/:id", updateMenuItem);
-
-// DELETE /api/menus/:id
-router.delete("/:id", deleteMenuItem);
+// Delete menu
+router.delete('/:id', async (req, res) => {
+  await Menu.findByIdAndDelete(req.params.id);
+  res.json({ message: 'Menu deleted' });
+});
 
 module.exports = router;

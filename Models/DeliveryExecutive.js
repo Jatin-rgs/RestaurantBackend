@@ -1,16 +1,10 @@
 const mongoose = require("mongoose");
 
 const DeliveryExecutiveSchema = new mongoose.Schema({
-  name: String,
-  phone: String,
-  orders: {
-    type: Number,
-    default: 0,
-  },
-  status: {
-    type: String,
-    default: "AVAILABLE",
-  },
+  name: { type: String, required: true },
+  phone: { type: String, required: true },
+  totalOrders: { type: Number, default: 0 },
+  status: { type: String, enum: ["AVAILABLE", "BUSY"], default: "AVAILABLE" },
 });
 
 module.exports = mongoose.model("DeliveryExecutive", DeliveryExecutiveSchema);

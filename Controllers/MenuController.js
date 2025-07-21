@@ -1,4 +1,4 @@
-const MenuItem = require("../Models/MenuItem");
+const MenuItem = require("../Models/MenuItemModel");
 
 // GET all items or by menu
 const getMenuItems = async (req, res) => {
